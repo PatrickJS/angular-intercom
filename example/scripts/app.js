@@ -4,7 +4,8 @@ angular.module('intercomApp', [
 .config(function($routeProvider) {
   $routeProvider
     .when('/', {
-      template: '/views/main',
+      templateUrl: '/views/main.html',
       controller: 'MainCtrl'
     });
 })
+
