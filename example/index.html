@@ -19,7 +19,16 @@
 
   <script src="scripts/app.js"></script>
   <script src="scripts/controllers/main.js"></script>
-
+  <script src="https://static.intercomcdn.com/intercom.v1.js" async="true"></script>
+  <script id="IntercomSettingsScriptTag">
+    window.intercomSettings = {
+      // TODO: The current logged in user's email address.
+      email: "john.doe@example.com",
+      // TODO: The current logged in user's sign-up date as a Unix timestamp.
+      created_at: 1234567890,
+      app_id: "e0bccbe6fa8da1e35dd485501a4251c2c987dab5"
+    };
+  </script>
   <script>
     angular.bootstrap(document.getElementById('ng-app'), ['intercomApp']);
   </script>
