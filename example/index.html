@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body id="ng-app">
+  <div ng-view>
+    Loading...
+  </div>
+
+  <script src="bower_components/jquery/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+
+  <script src="scripts/app.js"></script>
+  <script src="scripts/controllers/main.js"></script>
+
+  <script>
+    angular.bootstrap(document.getElementById('ng-app'), ['keychain']);
+  </script>
+
+</body>
+</html>
