@@ -3,7 +3,6 @@ An Angular.js wrapper for Intercom.io
 
 
 #How do I add this to my project?
-
 You can download angular-intercom by:
 
 * (prefered) Using bower and running `bower install angular-intercom --save`
@@ -12,15 +11,12 @@ You can download angular-intercom by:
 
 
 ````html
-<body ng-app="YOUR_APP" ng-controller="MainCtrl">
-  <a href="#error" ng-click="logError()">Log Error</a>
-</body>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.js"></script>
 <script src="app/bower_components/angular-intercom/angular-intercom.js"></script>
 
 <script>
   angular.module('YOUR_APP', [
-    'ngIntercom',
+    'ngIntercom', // or you can use 'angular-intercom'
     'controllers'
   ]);
 </script>
