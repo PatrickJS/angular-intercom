@@ -10,7 +10,7 @@
 </head>
 <body ng-app="intercomApp" ng-cloak>
 
-  <intercom></intercom>
+  <intercom user-id="8" user-email="john.doe@example.com"></intercom>
 
   <script>
     Error.stackTraceLimit = Infinity;
@@ -22,15 +22,7 @@
   <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
 
   <script src="../angular-intercom.js"></script>
-  <script id="IntercomSettingsScriptTag" type="text/javascript">
-    window.intercomSettings = {
-      // TODO: The current logged in user's email address.
-      email: "john.doe@example.com",
-      // TODO: The current logged in user's sign-up date as a Unix timestamp.
-      created_at: 1234567890,
-      app_id: "e0bccbe6fa8da1e35dd485501a4251c2c987dab5"
-    };
-  </script>
+
   <script type="text/javascript">
     angular.module('intercomApp', [
       'ngRoute',
@@ -45,18 +37,24 @@
         // manually set url since there is no local server running
         .scriptUrl('https://static.intercomcdn.com/intercom.v1.js');
     })
-    .run(function(Intercom) {
-      Intercom.boot();
+    .run(function(Intercom, IntercomAPI) {
+      Intercom.boot({
+        email: "john.doe@example.com",
+        created_at: 1234567890,
+        app_id: IntercomAPI
+      });
     })
     .controller('MainCtrl', function($scope, Intercom) {
     })
     .directive("intercom", function($cookieStore, Intercom, IntercomAPI) {
       return {
         restrict: 'E',
-        scope:{
+        scope: {
+          userId: '@',
+          userEmail: '@'
         },
         link: function(scope, element, attrs) {
-          scope.$watch('user_id', function(newVal, oldVal) {
+          scope.$watch('userId + userEmail', function(newVal, oldVal) {
             var userId = $cookieStore.get("userId");
             var accountId = $cookieStore.get("accountId");
             if (accountId && userId) {
@@ -64,7 +62,7 @@
               var createdAt = $cookieStore.get("createdAt");
               var hash = CryptoJS.HmacSHA256(accountId + '_' + userId, IntercomAPI);
 
-              Intercom.boot({
+              Intercom.update({
                 email: email,
                 user_id: accountId + '_' + userId,
                 created_at: createdAt,
