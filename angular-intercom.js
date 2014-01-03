@@ -129,8 +129,4 @@
     }]; // end $get
   });
 
-  module.run(['Intercom', function(Intercom) {
-    Intercom.boot();
-  }]);
-
 }(angular.module('angular-intercom',[]), angular);
