@@ -6,21 +6,23 @@
   <title></title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
-  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/2.1.3/normalize.min.css">
 </head>
-<body id="ng-app">
-  <div ng-view>
-    Loading...
-  </div>
+<body ng-app="intercomApp" ng-cloak>
 
-  <script src="bower_components/jquery/jquery.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
+  <intercom></intercom>
 
-  <script src="scripts/app.js"></script>
-  <script src="scripts/controllers/main.js"></script>
-  <script src="https://static.intercomcdn.com/intercom.v1.js" async="true"></script>
-  <script id="IntercomSettingsScriptTag">
+  <script>
+    Error.stackTraceLimit = Infinity;
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-route.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-animate.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-cookies.js"></script>
+  <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
+
+  <script src="../angular-intercom.js"></script>
+  <script id="IntercomSettingsScriptTag" type="text/javascript">
     window.intercomSettings = {
       // TODO: The current logged in user's email address.
       email: "john.doe@example.com",
@@ -29,8 +31,52 @@
       app_id: "e0bccbe6fa8da1e35dd485501a4251c2c987dab5"
     };
   </script>
-  <script>
-    angular.bootstrap(document.getElementById('ng-app'), ['intercomApp']);
+  <script type="text/javascript">
+    angular.module('intercomApp', [
+      'ngRoute',
+      'ngAnimate',
+      'ngCookies',
+      'ngIntercom'
+    ])
+    .constant('IntercomAPI', 'e0bccbe6fa8da1e35dd485501a4251c2c987dab5')
+    .config(function(IntercomServiceProvider) {
+      IntercomServiceProvider
+        .asyncLoading(true)
+        // manually set url since there is no local server running
+        .scriptUrl('https://static.intercomcdn.com/intercom.v1.js');
+    })
+    .run(function(Intercom) {
+      Intercom.boot();
+    })
+    .controller('MainCtrl', function($scope, Intercom) {
+    })
+    .directive("intercom", function($cookieStore, Intercom, IntercomAPI) {
+      return {
+        restrict: 'E',
+        scope:{
+        },
+        link: function(scope, element, attrs) {
+          scope.$watch('user_id', function(newVal, oldVal) {
+            var userId = $cookieStore.get("userId");
+            var accountId = $cookieStore.get("accountId");
+            if (accountId && userId) {
+              var userEmail = $cookieStore.get("userEmail");
+              var createdAt = $cookieStore.get("createdAt");
+              var hash = CryptoJS.HmacSHA256(accountId + '_' + userId, IntercomAPI);
+
+              Intercom.boot({
+                email: email,
+                user_id: accountId + '_' + userId,
+                created_at: createdAt,
+                app_id: IntercomAPI,
+                user_hash : hash.toString()
+              });
+
+            } //  end if
+          }); // end watch
+        } // end link
+      }; // end return
+    });
   </script>
 
 </body>
