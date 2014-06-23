@@ -1,4 +1,4 @@
-!function(module, angular, undefined) {
+! function(module, angular, undefined) {
   'use strict';
 
   angular.module('ngIntercom', ['angular-intercom']);
@@ -27,7 +27,7 @@
       scriptTag.type = 'text/javascript';
       scriptTag.async = true;
       scriptTag.src = _scriptUrl;
-      scriptTag.onreadystatechange = function () {
+      scriptTag.onreadystatechange = function() {
         if (this.readyState === 'complete') {
           callback();
         }
@@ -42,101 +42,88 @@
 
     this.$get = ['$document', '$timeout', '$q', '$window',
       function($document, $timeout, $q, $window) {
-      var deferred = $q.defer();
-      var _intercom = angular.isFunction($window.Intercom) ? $window.Intercom : angular.noop;
+        var deferred = $q.defer();
+        var _intercom = angular.isFunction($window.Intercom) ? $window.Intercom : angular.noop;
 
-      if (_asyncLoading) {
-        // wait up to 1 sec before aborting
-        var _try = 10;
-        // Load client in the browser
-        var onScriptLoad = function tryF(callback) {
-          $timeout(function() {
-            if(_try === 0){
-              return deferred.resolve($window.Intercom);
-            }
+        if (_asyncLoading) {
+          // wait up to 1 sec before aborting
+          var _try = 10;
+          // Load client in the browser
+          var onScriptLoad = function tryF(callback) {
+            $timeout(function() {
+              if (_try === 0) {
+                return deferred.resolve($window.Intercom);
+              }
 
-            if($window.Intercom){
-              // Resolve the deferred promise
-              // as the Intercom object on the window
-              return deferred.resolve($window.Intercom);
-            }
-            _try--;
-            setTimeout(tryF.bind(null, callback), 100); // wait 100ms before next try
-          });
-        };
-        createScript($document[0], onScriptLoad);
+              if ($window.Intercom) {
+                // Resolve the deferred promise
+                // as the Intercom object on the window
+                return deferred.resolve($window.Intercom);
+              }
+              _try--;
+              setTimeout(tryF.bind(null, callback), 100); // wait 100ms before next try
+            });
+          };
+          createScript($document[0], onScriptLoad);
+        }
+
+        return (_asyncLoading) ? deferred.promise : _intercom;
       }
-
-      return (_asyncLoading) ? deferred.promise: _intercom;
-    }];
+    ];
   });
 
   module.provider('Intercom', function() {
 
-    this.$get = ['IntercomService', 'IntercomSettings', function(IntercomService, IntercomSettings) {
-        var _options = {};
+    this.$get = ['IntercomService', 'IntercomSettings', '$q',
+      function(IntercomService, IntercomSettings, $q) {
+        var _options = {},
+          deferedBoot = $q.defer(),
+          iS;
 
         angular.extend(_options, IntercomSettings);
+
+        function intercomInstance(arg1, arg2, arg3) {
+          return deferedBoot.promise.then(function(iS) {
+            iS(arg1, arg2, arg3);
+          });
+        }
 
         return {
           boot: function(options) {
             if (IntercomService.then) {
-              IntercomService.then(function(intercom) {
-                intercom('boot', options || _options);
+              IntercomService.then(function(loadedIntercom) {
+                loadedIntercom('boot', options || _options);
+                deferedBoot.resolve(loadedIntercom);
               });
             } else {
               IntercomService('boot', options || _options);
+              deferedBoot.resolve(IntercomService);
             }
           },
-          update: function(data) {
-            if (IntercomService.then) {
-              IntercomService.then(function(intercom) {
-                if (data) {
-                  intercom('update', data) ;
-                } else {
-                  intercom('update');
-                }
-              });
-            } else {
-              if (data) {
-                IntercomService('update', data);
-              } else {
-                IntercomService('update');
-              }
-            }
 
+          update: function(data) {
+            if (data) {
+              intercomInstance('update', data);
+            } else {
+              intercomInstance('update');
+            }
+          },
+          trackEvent: function(eventName, data) {
+            intercomInstance('trackEvent', eventName, data);
           },
           shutdown: function() {
-            if (IntercomService.then) {
-              IntercomService.then(function(intercom) {
-                intercom('shutdown');
-              });
-            } else {
-              IntercomService('shutdown');
-            }
-
+            intercomInstance('shutdown');
           },
           hide: function() {
-            if (IntercomService.then) {
-              IntercomService.then(function(intercom) {
-                intercom('hide');
-              });
-            } else {
-              IntercomService('hide');
-            }
-
+            intercomInstance('hide');
           },
           show: function() {
-            if (IntercomService.then) {
-              IntercomService.then(function(intercom) {
-                intercom('show');
-              });
-            } else {
-              IntercomService('Show');
-            }
+            intercomInstance('Show');
           }
         }; // end return
-    }]; // end $get
+      }
+    ]; // end $get
   });
 
-}(angular.module('angular-intercom',[]), angular);
+}(angular.module('angular-intercom', []), angular);
+
