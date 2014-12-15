@@ -118,7 +118,7 @@
             intercomInstance('hide');
           },
           show: function() {
-            intercomInstance('Show');
+            intercomInstance('show');
           }
         }; // end return
       }
@@ -126,4 +126,3 @@
   });
 
 }(angular.module('angular-intercom', []), angular);
-
