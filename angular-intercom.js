@@ -76,9 +76,9 @@
 
     this.$get = ['IntercomService', 'IntercomSettings', '$q',
       function(IntercomService, IntercomSettings, $q) {
-        var _options = {},
-          deferedBoot = $q.defer(),
-          iS;
+        var _options = {};
+        var deferedBoot = $q.defer();
+        var iS;
 
         angular.extend(_options, IntercomSettings);
 
@@ -124,5 +124,10 @@
       }
     ]; // end $get
   });
+
+  // alias $intercom
+  module.factory('$intercom', ['Intercom', function(Intercom) {
+    return Intercom;
+  }]);
 
 }(angular.module('angular-intercom', []), angular);
