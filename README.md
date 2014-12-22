@@ -13,6 +13,7 @@ You can download angular-intercom by:
 ````html
 <!-- I'm using angular 1.3 but any should work -->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
+<!-- include the script any way you like -->
 <script src="app/bower_components/angular-intercom/angular-intercom.js"></script>
 
 <script>
@@ -26,7 +27,9 @@ You can download angular-intercom by:
     user_id: '9876'
   })
 
-  .constant('INTERCOM_APPID', 'd0idn8ii')// inject your app_id anyway you like
+  // inject your app_id anyway you like
+  .constant('INTERCOM_APPID', 'd0idn8ii')
+
 
   .config(function($intercomProvider, INTERCOM_APPID) {
     $intercomProvider
@@ -40,7 +43,7 @@ You can download angular-intercom by:
 
     $scope.user = fakeUser;
 
-    // $on will trigger a safe $apply on $rootSCope
+    // $on will trigger a safe $apply on $rootScope
     $intercom.$on('show', function() {
       $scope.showing = true; // currently Intercom onShow callback isn't working
     });
