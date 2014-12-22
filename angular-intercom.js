@@ -119,6 +119,9 @@
           },
           show: function() {
             intercomInstance('show');
+          },
+          reattachActivator: function() {
+            intercomInstance('reattach_activator');
           }
         }; // end return
       }
