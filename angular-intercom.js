@@ -1,16 +1,34 @@
-!function(global, angular, undefined) {
+(function (root, factory) {
+  // AMD
+  if (typeof define === 'function' && define.amd) {
+    define(['angular', 'intercom'], function (angular, intercom) {
+      return factory({}, angular, intercom);
+    });
+  }
+  // Node.js
+  else if (typeof exports === 'object') {
+    module.exports = factory({}, require('angular'), require('intercom'));
+  }
+  // Angular
+  else if (angular) {
+    factory(root, root.angular, root.Intercom);
+  }
+}(this, function (global, angular, Intercom) {
   'use strict';
-
+  if (Intercom && global && !global.Intercom) { global.Intercom = Intercom; }
 
   function _capitalize_(string) {
     return (!string) ? '' : string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
   }
+  var intercomSettings = global.IntercomSettings || global.intercomSettings;
 
   // if intercom exist then reattach
   var intercom_exist = false;
-  if (angular.isFunction(global.Intercom)) {
+  if (angular.isFunction(Intercom)) {
     global.Intercom('reattach_activator');
-    global.Intercom('update', global.intercomSettings );
+    if (intercomSettings) {
+      global.Intercom('update', intercomSettings);
+    }
     intercom_exist = true;
   } else {
     // build Intercom for async loading
@@ -24,8 +42,7 @@
     global.Intercom = build_intercom;
   }
 
-  angular.module('angular-intercom', []);
-  angular.module('ngIntercom', ['angular-intercom'])
+  angular.module('ngIntercom', [])
   .value('IntercomSettings', {})
   .provider('$intercom', function() {
 
@@ -47,6 +64,7 @@
     // and call our onScriptLoad callback when it
     // has been loaded
     function createScript(url, appID) {
+      if (!document) { return; }
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.async = true;
@@ -75,7 +93,7 @@
 
 
       function $intercom() {
-        global.Intercom.apply(global.Intercom, arguments);
+        global.Intercom.apply(Intercom, arguments);
         return this;
       }
 
@@ -143,7 +161,7 @@
       function buildMethod(func, method) {
         $intercom[method] = func;
         $intercom['$'+method] = function() {
-          func.apply(global.Intercom, arguments);
+          func.apply(Intercom, arguments);
           if (!$rootScope.$$phase) { $rootScope.$apply(); }
           return $intercom;
         };
@@ -180,7 +198,7 @@
         if (!method) { return; }
         buildMethod(method, function() {
           var args = Array.prototype.slice.call(arguments);
-          global.Intercom.apply(global.Intercom, args.unshift(method));
+          global.Intercom.apply(Intercom, args.unshift(method));
           return $intercom;
         });
       };
@@ -188,9 +206,16 @@
       return $intercom;
     }]; // end $get
   }) // end provider
-  .factory('Intercom', ['$intercom', function($intercom) {
-    return $intercom;
-  }]);
+  .provider('Intercom', function() {
+    this.$get = ['$intercom', '$log', function($intercom, $log) {
+      $log.warn('Please use $intercom rather than Intercom https://github.com/gdi2290/angular-intercom');
+      return $intercom;
+    }];
+  });
+
+  angular.module('angular-intercom', ['ngIntercom']);
+
+  return angular.module('ngIntercom');
 
   // Intercom's script break down
   /*
@@ -198,8 +223,8 @@
     // if intercom exist then reattach
     var _intercom = window.Intercom;
     if (typeof _intercom === "function" ) {
-      _intercom('reattach_activator');
-      _intercom('update', window.intercomSettings );
+      _global.intercom('reattach_activator');
+      _global.intercom('update', window.intercomSettings );
     } else {
 
       // build Intercom for async loading
@@ -229,6 +254,5 @@
     }
   })();
   */
-
-}(this, angular);
+}));
 
