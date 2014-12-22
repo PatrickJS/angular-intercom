@@ -1,7 +1,27 @@
 {
   "name": "angular-intercom",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "angular-intercom.js",
+  "description": "An Angular.js wrapper for Intercom.io",
+  "bugs": "https://github.com/gdi2290/angular-intercom/issues",
+  "keywords": [
+    "angular",
+    "angularmodules",
+    "angularmodule",
+    "angularjs",
+    "gdi2290",
+    "PatrickJS",
+    "intercom",
+    "angular-intercom",
+    "ngIntercom",
+    "adapter",
+    "wrapper"
+  ],
+  "author": {
+    "name": "Patrick Stapleton",
+    "email": "github@gdi2290.com",
+    "url": "www.gdi2290.com"
+  },
   "ignore": [
     "**/.*",
     "*.yml",
@@ -11,6 +31,7 @@
     "test",
     "tests"
   ],
+  "license": "MIT",
   "dependencies": {
     "angular": "*"
   }
