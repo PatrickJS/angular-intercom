@@ -22,8 +22,8 @@
   }
   var intercomSettings = global.IntercomSettings || global.intercomSettings;
 
-  // if intercom exist then reattach
   var intercom_exist = false;
+  // if intercom exist then reattach
   if (angular.isFunction(Intercom)) {
     global.Intercom('reattach_activator');
     if (intercomSettings) {
@@ -32,6 +32,7 @@
     intercom_exist = true;
   } else {
     // build Intercom for async loading
+    // see commented out code at the bottom for more details
     var build_intercom = function() {
       build_intercom.c(arguments);
     };
@@ -85,6 +86,7 @@
 
       var _options = {};
 
+      // ensure appID is added to _options
       if (config.appID) {
         _options.app_id = _options.app_id || config.appID;
       }
@@ -165,6 +167,11 @@
         }
       };
 
+      // this allows you to use methods prefixed with '$' to safe $apply on $rootScope
+      /*
+        $intercom.trackEvent( 'event', {data: 'data'});
+        $intercom.$trackEvent('event', {data: 'data'}); // digest loop has been triggered
+      */
       function buildMethod(func, method) {
         $intercom[method] = func;
         $intercom['$'+method] = function() {
@@ -176,6 +183,7 @@
 
       angular.forEach(methods, buildMethod);
 
+      // 3 events exposed by intercom allowing you to hook in callbacks
       var isEvent = {
         'show': true,
         'hide': true,
