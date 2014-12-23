@@ -46,14 +46,32 @@
   angular.module('ngIntercom', [])
   .value('IntercomSettings', {})
   .provider('$intercom', function() {
+  // Create a script tag with moment as the source
+  // and call our onScriptLoad callback when it
+  // has been loaded
+  function createScript(url, appID) {
+    if (!document) { return; }
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = url+appID;
+    // Attach the script tag to the document head
+    var s = document.getElementsByTagName('head')[0];
+    s.appendChild(script);
+  }
+
+  var config = {
+    'asyncLoading': false,
+    'scriptUrl': 'https://widget.intercom.io/widget/',// <INSERT APP_ID HERE>
+    'appID': '',
+    'development': false
+  };
+
+  // Allow constructor to be used for both $intercom and Intercom services
+  function $IntercomProvider() {
 
     var provider = this;
-    var config = {
-      'asyncLoading': false,
-      'scriptUrl': 'https://widget.intercom.io/widget/',// <INSERT APP_ID HERE>
-      'appID': '',
-      'development': false
-    };
+
     angular.forEach(config, function(val, key) {
       provider[key] = function(newValue) {
         config[key] = newValue || val;
@@ -61,19 +79,6 @@
       };
     });
 
-    // Create a script tag with moment as the source
-    // and call our onScriptLoad callback when it
-    // has been loaded
-    function createScript(url, appID) {
-      if (!document) { return; }
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.async = true;
-      script.src = url+appID;
-      // Attach the script tag to the document head
-      var s = document.getElementsByTagName('head')[0];
-      s.appendChild(script);
-    }
     provider.$get = ['$rootScope', '$log', 'IntercomSettings', function($rootScope, $log, IntercomSettings) {
       // warn the user if they inject both $intercom and Intercom
       if (instance) {
