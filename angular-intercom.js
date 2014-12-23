@@ -121,7 +121,6 @@
           } else {
             global.Intercom('update');
           }
-          console.log('update data', data);
           return $intercom;
         },
         trackEvent: function(eventName, data) {
@@ -178,7 +177,6 @@
       $intercom.$on = function(event, callback) {
         if (!isEvent[event]) { return; }
         global.Intercom('on'+_capitalize_(event), function() {
-          console.log('on', event);
           if ($rootScope.$$phase) {
             callback();
           } else {
