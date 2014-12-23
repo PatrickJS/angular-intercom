@@ -1,5 +1,5 @@
 # angular-intercom [![Build Status](https://travis-ci.org/gdi2290/angular-intercom.png?branch=master)](https://travis-ci.org/gdi2290/angular-intercom)
-An Angular.js wrapper for Intercom.io providing a simple and familiar API for Angular Developer. I also added a asynchronous loading option <code>$intercomProvider.asyncLoading(true)</code> to allow anyone to quickly drop in and start using Intercom.
+An Angular.js wrapper for Intercom.io providing a simple and familiar API for Angular Developer. I also added a asynchronous loading option <code>$intercomProvider.asyncLoading(true)</code> to allow anyone to quickly drop in and start using Intercom. This is great for startups who need a quick and easy way to interact with their customers
 
 
 #How do I add this to my project?
@@ -13,7 +13,7 @@ You can download `angular-intercom` by:
 # Example
 Here is a simple [Example App](https://gdi2290.net/angular-intercom/example/) which allows you to include your own `app_id` to test. Below is a quick start guide
 ````html
-<!-- I'm using angular 1.3 but any should work -->
+<!-- I'm using angular 1.3.8+ but any version should work -->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
 <!-- include the script any way you like -->
 <script src="app/bower_components/angular-intercom/angular-intercom.js"></script>
@@ -79,4 +79,8 @@ Here is a simple [Example App](https://gdi2290.net/angular-intercom/example/) wh
 ![](https://marketing.intercomcdn.com/assets/squarespace/screens/04-f880111f72c193cc0a4555d441a714d6.jpg)
 What is Intercom? An entirely new way to connect with your customers. Intercom shows you who is using your product and makes it easy to personally communicate with them through targeted, behavior-driven email and in-app messages.
 
+# Changelog
+Please see [changelog](https://github.com/gdi2290/angular-intercom/blob/master/CHANGELOG.md) for recent updates
 
+# License
+[MIT](https://github.com/gdi2290/angular-intercom/blob/master/LICENSE)
