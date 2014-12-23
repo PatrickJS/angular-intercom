@@ -103,7 +103,7 @@
 
 
       function $intercom() {
-        global.Intercom.apply(Intercom, arguments);
+        global.Intercom.apply(global.Intercom, arguments);
         return this;
       }
 
@@ -213,7 +213,7 @@
         if (!method) { return; }
         buildMethod(method, function() {
           var args = Array.prototype.slice.call(arguments);
-          global.Intercom.apply(Intercom, args.unshift(method));
+          global.Intercom.apply(global.Intercom, args.unshift(method));
           return $intercom;
         });
       };
