@@ -37,26 +37,28 @@ Here is a simple [Example App](https://gdi2290.net/angular-intercom/example/) wh
     // Either include your app_id here or later on boot
     $intercomProvider
       .appID(INTERCOM_APPID);
-      
+
     // you can include the Intercom's script yourself or use the built in async loading feature
     $intercomProvider
-      .asyncLoading(true) 
+      .asyncLoading(true)
   })
   .run(function($intercom, fakeUser) {
     // boot Intercom after you have user data usually after auth success
     $intercom.boot(fakeUser); // app_id not required if set in .config() block
   })
   .controller('MainCtrl', function($scope, $intercom, fakeUser) {
-  
+
     $scope.user = fakeUser;
 
-    // Register listeners to $intercom using $on that will trigger a safe $apply on $rootScope
+    // Register listeners to $intercom using '.$on()' rather than '.on()' to trigger a safe $apply on $rootScope
     $intercom.$on('show', function() {
       $scope.showing = true; // currently Intercom onShow callback isn't working
     });
     $intercom.$on('hide', function() {
       $scope.showing = false;
     });
+
+
 
     $scope.show = function() {
       $intercom.show();
