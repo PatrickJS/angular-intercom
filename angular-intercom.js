@@ -69,7 +69,7 @@
       script.type = 'text/javascript';
       script.async = true;
       script.src = url+appID;
-      // Attach the script tag to the document body
+      // Attach the script tag to the document head
       var s = document.getElementsByTagName('head')[0];
       s.appendChild(script);
     }
