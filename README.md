@@ -11,11 +11,32 @@ You can download `angular-intercom` by:
 * CDN `https://cdn.rawgit.com/gdi2290/angular-intercom/master/angular-intercom.min.js`
 
 # Example
-Here is a simple [Example App](https://gdi2290.net/angular-intercom/example/) which allows you to include your own `app_id` to test. Below is a quick start guide
+Here is a simple [Example App](https://gdi2290.net/angular-intercom/example/) which allows you to include your own `app_id` to test. Below is a quick start guide. Use either `$intercom` or `Intercom` service depending on your preference and opinions.
 ````html
 <!-- I'm using angular 1.3.8+ but any version should work -->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
-<!-- include the script any way you like -->
+
+
+<!-- 
+You can include Intercom's script manually just make sure you add your app_id
+<script async defer src="https://widget.intercom.io/widget/<%= INTERCOM_APPID %>"></script>
+-->
+
+<!-- 
+Or you can include Intercom sdk as you normally would
+<script>
+(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;
+
+s.src='https://widget.intercom.io/widget/<%= INSERT APP_ID HERE %>';
+
+var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
+</script>
+-->
+<!-- 
+Or you can ask the module to load the script for you (see below) 
+-->
+
+<!-- include this module after angular.js -->
 <script src="app/bower_components/angular-intercom/angular-intercom.js"></script>
 
 <script>
@@ -43,9 +64,10 @@ Here is a simple [Example App](https://gdi2290.net/angular-intercom/example/) wh
       .asyncLoading(true)
   })
   .run(function($intercom, fakeUser) {
-    // boot Intercom after you have user data usually after auth success
+    // boot $intercom after you have user data usually after auth success
     $intercom.boot(fakeUser); // app_id not required if set in .config() block
   })
+  //                                       Intercom // you may use Intercom rather than $intercom
   .controller('MainCtrl', function($scope, $intercom, fakeUser) {
 
     $scope.user = fakeUser;
