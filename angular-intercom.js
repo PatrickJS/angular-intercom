@@ -43,9 +43,6 @@
   }
   var instance = false;
 
-  angular.module('ngIntercom', [])
-  .value('IntercomSettings', {})
-  .provider('$intercom', function() {
   // Create a script tag with moment as the source
   // and call our onScriptLoad callback when it
   // has been loaded
@@ -215,14 +212,15 @@
 
       return $intercom;
     }]; // end $get
-  }) // end provider
-  .provider('Intercom', function() {
-    this.$get = ['$intercom', '$log', function($intercom, $log) {
-      $log.warn('Please use $intercom rather than Intercom https://github.com/gdi2290/angular-intercom');
-      return $intercom;
-    }];
-  });
+  }
 
+  angular.module('ngIntercom', [])
+  // some people use .value  pattern to config their services
+  .value('IntercomSettings', {})
+  .provider('$intercom', $IntercomProvider)
+  .provider('Intercom',  $IntercomProvider);
+
+  // allow you to use either module
   angular.module('angular-intercom', ['ngIntercom']);
 
   return angular.module('ngIntercom');
