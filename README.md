@@ -1,15 +1,17 @@
 # angular-intercom [![Build Status](https://travis-ci.org/gdi2290/angular-intercom.png?branch=master)](https://travis-ci.org/gdi2290/angular-intercom)
-An Angular.js wrapper for Intercom.io
+An Angular.js wrapper for Intercom.io providing a simple and familiar API for Angular Developer. I also added a asynchronous loading option <code>$intercomProvider.asyncLoading(true)</code> to allow anyone to quickly drop in and start using Intercom.
 
 
 #How do I add this to my project?
-You can download angular-intercom by:
+You can download `angular-intercom` by:
 
 * (prefered) Using bower and running `bower install angular-intercom --save`
 * Using npm and running `npm install angular-intercom --save`
-* Downloading it manually by clicking [here to download development unminified version](https://cdn.rawgit.com/gdi2290/angular-intercom/master/angular-intercom.js)
+* Downloading it manually by clicking here to download development [(unminified)](https://cdn.rawgit.com/gdi2290/angular-intercom/master/angular-intercom.js) [(minified)](https://cdn.rawgit.com/gdi2290/angular-intercom/master/angular-intercom.min.js)
+* CDN `https://cdn.rawgit.com/gdi2290/angular-intercom/master/angular-intercom.min.js`
 
-
+# Example
+Here is a simple [Example App](https://gdi2290.net/angular-intercom/example/) which allows you to include your own `app_id` to test. Below is a quick start guide
 ````html
 <!-- I'm using angular 1.3 but any should work -->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.js"></script>
@@ -30,20 +32,25 @@ You can download angular-intercom by:
   // inject your app_id anyway you like
   .constant('INTERCOM_APPID', 'd0idn8ii')
 
-
+  // Configure your $intercom module with appID
   .config(function($intercomProvider, INTERCOM_APPID) {
+    // Either include your app_id here or later on boot
     $intercomProvider
-      .asyncLoading(true) // you can include the script yourself or async load it
-      .appID(INTERCOM_APPID); // either include your app id here or later on boot
+      .appID(INTERCOM_APPID);
+      
+    // you can include the Intercom's script yourself or use the built in async loading feature
+    $intercomProvider
+      .asyncLoading(true) 
   })
   .run(function($intercom, fakeUser) {
+    // boot Intercom after you have user data usually after auth success
     $intercom.boot(fakeUser); // app_id not required if set in .config() block
   })
   .controller('MainCtrl', function($scope, $intercom, fakeUser) {
-
+  
     $scope.user = fakeUser;
 
-    // $on will trigger a safe $apply on $rootScope
+    // Register listeners to $intercom using $on that will trigger a safe $apply on $rootScope
     $intercom.$on('show', function() {
       $scope.showing = true; // currently Intercom onShow callback isn't working
     });
@@ -68,5 +75,8 @@ You can download angular-intercom by:
 </script>
 ````
 
+# Intercom.io
+![](https://marketing.intercomcdn.com/assets/squarespace/screens/04-f880111f72c193cc0a4555d441a714d6.jpg)
+What is Intercom? An entirely new way to connect with your customers. Intercom shows you who is using your product and makes it easy to personally communicate with them through targeted, behavior-driven email and in-app messages.
 
 
