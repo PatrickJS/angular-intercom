@@ -41,6 +41,7 @@
     };
     global.Intercom = build_intercom;
   }
+  var instance = false;
 
   angular.module('ngIntercom', [])
   .value('IntercomSettings', {})
@@ -73,8 +74,13 @@
       var s = document.getElementsByTagName('head')[0];
       s.appendChild(script);
     }
+    provider.$get = ['$rootScope', '$log', 'IntercomSettings', function($rootScope, $log, IntercomSettings) {
+      // warn the user if they inject both $intercom and Intercom
+      if (instance) {
+        $log.warn('Please use consider using either $intercom or Intercom not both');
+      }
+      instance = true;
 
-    provider.$get = ['$rootScope', 'IntercomSettings', function($rootScope, IntercomSettings) {
       var _options = {};
 
       if (config.appID) {
