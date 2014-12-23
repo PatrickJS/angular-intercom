@@ -192,7 +192,8 @@
         return $intercom;
       };
 
-      $intercom._extend = function(method) {
+      // experimental '$$defineMethod' method to extend $intercom
+      $intercom.$$defineMethod = function(method) {
         if (!method) { return; }
         buildMethod(method, function() {
           var args = Array.prototype.slice.call(arguments);
