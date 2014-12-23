@@ -22,8 +22,8 @@
   }
   var intercomSettings = global.IntercomSettings || global.intercomSettings;
 
-  // if intercom exist then reattach
   var intercom_exist = false;
+  // if intercom exist then reattach
   if (angular.isFunction(Intercom)) {
     global.Intercom('reattach_activator');
     if (intercomSettings) {
@@ -32,6 +32,7 @@
     intercom_exist = true;
   } else {
     // build Intercom for async loading
+    // see commented out code at the bottom for more details
     var build_intercom = function() {
       build_intercom.c(arguments);
     };
@@ -41,18 +42,34 @@
     };
     global.Intercom = build_intercom;
   }
+  var instance = false;
 
-  angular.module('ngIntercom', [])
-  .value('IntercomSettings', {})
-  .provider('$intercom', function() {
+  // Create a script tag with moment as the source
+  // and call our onScriptLoad callback when it
+  // has been loaded
+  function createScript(url, appID) {
+    if (!document) { return; }
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = url+appID;
+    // Attach the script tag to the document head
+    var s = document.getElementsByTagName('head')[0];
+    s.appendChild(script);
+  }
+
+  var config = {
+    'asyncLoading': false,
+    'scriptUrl': 'https://widget.intercom.io/widget/',// <INSERT APP_ID HERE>
+    'appID': '',
+    'development': false
+  };
+
+  // Allow constructor to be used for both $intercom and Intercom services
+  function $IntercomProvider() {
 
     var provider = this;
-    var config = {
-      'asyncLoading': false,
-      'scriptUrl': 'https://widget.intercom.io/widget/',// <INSERT APP_ID HERE>
-      'appID': '',
-      'development': false
-    };
+
     angular.forEach(config, function(val, key) {
       provider[key] = function(newValue) {
         config[key] = newValue || val;
@@ -60,23 +77,16 @@
       };
     });
 
-    // Create a script tag with moment as the source
-    // and call our onScriptLoad callback when it
-    // has been loaded
-    function createScript(url, appID) {
-      if (!document) { return; }
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.async = true;
-      script.src = url+appID;
-      // Attach the script tag to the document head
-      var s = document.getElementsByTagName('head')[0];
-      s.appendChild(script);
-    }
+    provider.$get = ['$rootScope', '$log', 'IntercomSettings', function($rootScope, $log, IntercomSettings) {
+      // warn the user if they inject both $intercom and Intercom
+      if (instance) {
+        $log.warn('Please use consider using either $intercom or Intercom not both');
+      }
+      instance = true;
 
-    provider.$get = ['$rootScope', 'IntercomSettings', function($rootScope, IntercomSettings) {
       var _options = {};
 
+      // ensure appID is added to _options
       if (config.appID) {
         _options.app_id = _options.app_id || config.appID;
       }
@@ -157,6 +167,11 @@
         }
       };
 
+      // this allows you to use methods prefixed with '$' to safe $apply on $rootScope
+      /*
+        $intercom.trackEvent( 'event', {data: 'data'});
+        $intercom.$trackEvent('event', {data: 'data'}); // digest loop has been triggered
+      */
       function buildMethod(func, method) {
         $intercom[method] = func;
         $intercom['$'+method] = function() {
@@ -168,6 +183,7 @@
 
       angular.forEach(methods, buildMethod);
 
+      // 3 events exposed by intercom allowing you to hook in callbacks
       var isEvent = {
         'show': true,
         'hide': true,
@@ -192,7 +208,8 @@
         return $intercom;
       };
 
-      $intercom._extend = function(method) {
+      // experimental '$$defineMethod' method to extend $intercom
+      $intercom.$$defineMethod = function(method) {
         if (!method) { return; }
         buildMethod(method, function() {
           var args = Array.prototype.slice.call(arguments);
@@ -203,14 +220,15 @@
 
       return $intercom;
     }]; // end $get
-  }) // end provider
-  .provider('Intercom', function() {
-    this.$get = ['$intercom', '$log', function($intercom, $log) {
-      $log.warn('Please use $intercom rather than Intercom https://github.com/gdi2290/angular-intercom');
-      return $intercom;
-    }];
-  });
+  }
 
+  angular.module('ngIntercom', [])
+  // some people use .value  pattern to config their services
+  .value('IntercomSettings', {})
+  .provider('$intercom', $IntercomProvider)
+  .provider('Intercom',  $IntercomProvider);
+
+  // allow you to use either module
   angular.module('angular-intercom', ['ngIntercom']);
 
   return angular.module('ngIntercom');
