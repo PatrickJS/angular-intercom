@@ -137,11 +137,15 @@
           global.Intercom('trackEvent', eventName, data);
           return $intercom;
         },
-        showMessages: function(data) {
+        showMessages: function() {
+          global.Intercom('showMessages');
+          return $intercom;
+        },
+        showNewMessage: function(data) {
           if (data) {
-            global.Intercom('showMessages', data);
+            global.Intercom('showNewMessage', data);
           } else {
-            global.Intercom('showMessages');
+            global.Intercom('showNewMessage');
           }
           return $intercom;
         },
