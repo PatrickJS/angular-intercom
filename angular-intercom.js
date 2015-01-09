@@ -1,3 +1,8 @@
+/**
+ * @license angular-intercom
+ * (c) 2014-2015 PatrickJS gdi2290.com
+ * License: MIT
+ */
 (function (root, factory) {
   // AMD
   if (typeof define === 'function' && define.amd) {
