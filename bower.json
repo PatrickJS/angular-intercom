@@ -23,6 +23,17 @@
     "url": "www.gdi2290.com"
   },
   "ignore": [
+    ".bowerrc",
+    ".gitignore",
+    ".npmignore",
+    ".jshintignore",
+    ".jshintrc",
+    "karma.conf.js",
+    "test.sh",
+    "dist.sh",
+    "src",
+    "example",
+    "package.json",
     "**/.*",
     "*.yml",
     "*.xml",
