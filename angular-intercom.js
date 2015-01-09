@@ -109,7 +109,7 @@
 
       function $intercom() {
         global.Intercom.apply(global.Intercom, arguments);
-        return this;
+        return $intercom;
       }
 
       var methods = {
@@ -155,6 +155,7 @@
           return $intercom;
         },
         hideMessages: function() {
+          // Not sure this is even a real intercom api
           global.Intercom('hideMessages');
           return $intercom;
         },
