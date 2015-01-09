@@ -1,3 +1,8 @@
+## 2.0.4 (2015-1-9)
+
+Features:
+  - Include files to ignore for bower and npm
+
 ## 2.0.3 (2015-1-9)
 
 Bugfixes:
