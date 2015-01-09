@@ -42,7 +42,7 @@ You can download angular-intercom by:
 
     // $on will trigger a safe $apply on $rootSCope
     $intercom.$on('show', function() {
-      $scope.showing = true; // currently Intercom onShow callback isn't working
+      $scope.showing = true;
     });
     $intercom.$on('hide', function() {
       $scope.showing = false;
