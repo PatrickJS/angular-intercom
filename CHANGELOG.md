@@ -1,3 +1,13 @@
+## 2.0.3 (2015-1-9)
+
+Bugfixes:
+  - License
+  - Update min
+  - Missing showNewMessage
+
+Features:
+  - showMessages doesn't take arguments
+
 ## 2.0.2 (2014-12-23)
 
 Bugfixes:
