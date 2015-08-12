@@ -6,13 +6,20 @@
 (function (root, factory) {
   // AMD
   if (typeof define === 'function' && define.amd) {
-    define(['angular', 'intercom'], function (angular, intercom) {
-      return factory({}, angular, intercom);
+    define(['angular'], function (angular) {
+      return factory(root, angular, root.Intercom);
     });
   }
   // Node.js
   else if (typeof exports === 'object') {
-    module.exports = factory({}, require('angular'), require('intercom'));
+    // Optional require in the intercom
+    var intercom = null;
+    try {
+      intercom = require('intercom')
+    } catch (error) {
+
+    }
+    module.exports = factory({}, require('angular'), intercom);
   }
   // Angular
   else if (angular) {
