@@ -99,6 +99,64 @@ Or you can ask the module to load the script for you (see below)
 </script>
 ````
 
+# Require.js/AMD
+`angular-intercom` is provides a Require.js/AMD interface, however it works differently depending on if you are using 
+`$intercomProvider.asyncLoading(true)`or not.
+
+If you are using `$intercomProvider.asyncLoading(true)`, then *don't* specify the `"intercom"` dependency at all, just load
+'angular-intercom' in paths, i.e.
+
+```javascript
+paths: {
+  "angular_intercom": '/somePath/angular-intercom/angular-intercom'
+}
+```
+
+If you wish to load the intercom library through Require.js/AMD rather than using `$intercomProvider.asyncLoading(true)`, you first
+need to find the CDN url provided by intercom.io. To do this, curl the url you received from intercom.io during intercom.io setup
+
+```
+curl https://widget.intercom.io/widget/INTERCOM_APPID
+```
+
+You should get something like 
+```html
+<html><body>You are being <a href="https://js.intercomcdn.com/intercom.xxxxxxx.js">redirected</a>.</body></html>
+```
+
+This means your CDN url is `https://js.intercomcdn.com/intercom.xxxxxxx.js`. Now in your paths for require.js, 
+you would have something like this (remember to remove the `.js` at the end of the CDN url)
+
+```javascript
+paths: {
+  "intercom": "https://js.intercomcdn.com/intercom.xxxxxxx",
+  "angular_intercom": '/somePath/angular-intercom/angular-intercom'
+}
+```
+
+And in your shim, you would do this
+
+```javascript
+shim: {
+  "angular_intercom": ["intercom"]
+}
+```
+
+When `"intercom"` loads, it will attach itself to `window`, which will automatically be detected by angular-intercom
+
+Then you can just use "angular_intercom" as any other `Require.js/AMD` module definition, i.e.
+
+```javascript
+define(['angular', 'angular_intercom'], function(angular, angular_intercom) {
+  // Bootstrap angular here
+});
+```
+
+# NPM
+
+In node.js, angular-intercom will try and require a `intercom` dependency. If this fails, it will expect the `intercom`
+object to exposed via the `global` object
+
 # Intercom.io
 ![](https://marketing.intercomcdn.com/assets/squarespace/screens/04-f880111f72c193cc0a4555d441a714d6.jpg)
 What is Intercom? An entirely new way to connect with your customers. Intercom shows you who is using your product and makes it easy to personally communicate with them through targeted, behavior-driven email and in-app messages.
