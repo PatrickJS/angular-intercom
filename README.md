@@ -104,7 +104,7 @@ Or you can ask the module to load the script for you (see below)
 `$intercomProvider.asyncLoading(true)`or not.
 
 If you are using `$intercomProvider.asyncLoading(true)`, then *don't* specify the `"intercom"` dependency at all, just load
-'angular-intercom' in paths, i.e.
+`"angular_intercom"` in paths, i.e.
 
 ```javascript
 paths: {
