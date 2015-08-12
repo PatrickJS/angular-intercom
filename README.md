@@ -154,7 +154,7 @@ define(['angular', 'angular_intercom'], function(angular, angular_intercom) {
 
 # NPM
 
-In node.js, angular-intercom will try and require a `intercom` dependency. If this fails, it will expect the `intercom`
+In node.js, angular-intercom will try and require a `intercom` dependency. If this fails, it will expect the `Intercom`
 object to exposed via the `global` object
 
 # Intercom.io
