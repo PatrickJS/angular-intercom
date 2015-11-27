@@ -96,13 +96,17 @@
       }
       instance = true;
 
-      var _options = {};
+      var _options;
+      var initializeOptions = function() {
+        _options = {};
+        // ensure appID is added to _options
+        if (config.appID) {
+          _options.app_id = _options.app_id || config.appID;
+        }
+        angular.extend(_options, IntercomSettings);
+      };
 
-      // ensure appID is added to _options
-      if (config.appID) {
-        _options.app_id = _options.app_id || config.appID;
-      }
-      angular.extend(_options, IntercomSettings);
+      initializeOptions();
 
       if (intercom_exist) {
         global.Intercom('reattach_activator');
@@ -168,6 +172,7 @@
         },
         shutdown: function() {
           global.Intercom('shutdown');
+          initializeOptions();
           return $intercom;
         },
         hide: function() {
