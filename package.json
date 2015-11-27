@@ -1,6 +1,6 @@
 {
   "name": "angular-intercom",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "angular-intercom.js",
   "description": "An Angular.js wrapper for Intercom.io",
   "homepage": "https://github.com/gdi2290/angular-intercom",
@@ -32,8 +32,7 @@
       "type": "MIT"
     }
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
     "load-grunt-tasks": "~0.1.0",
