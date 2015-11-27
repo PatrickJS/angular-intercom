@@ -1,3 +1,8 @@
+## 2.1.1 (2015-11-28)
+
+Bugfixes:
+  - Properly reset user data when `$intercom.shutdown` is called
+
 ## 2.0.4 (2015-1-9)
 
 Features:
