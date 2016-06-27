@@ -1,3 +1,8 @@
+## 2.1.2 (2016-06-27)
+
+Bugfixes:
+  - Don't use `$apply()` method to prevent `$digest already in progress` errors. See <http://davidburgosonline.com/dev/2014/correctly-fix-angularjs-error-digest-already-in-progress/>
+
 ## 2.1.1 (2015-11-28)
 
 Bugfixes:
