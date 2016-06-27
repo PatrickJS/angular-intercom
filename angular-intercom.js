@@ -89,7 +89,7 @@
       };
     });
 
-    provider.$get = ['$rootScope', '$log', 'IntercomSettings', function($rootScope, $log, IntercomSettings) {
+    provider.$get = ['$rootScope', '$log', '$timeout', 'IntercomSettings', function($rootScope, $log, $timeout, IntercomSettings) {
       // warn the user if they inject both $intercom and Intercom
       if (instance) {
         $log.warn('Please use consider using either $intercom or Intercom not both');
@@ -197,8 +197,9 @@
       function buildMethod(func, method) {
         $intercom[method] = func;
         $intercom['$'+method] = function() {
-          func.apply(Intercom, arguments);
-          if (!$rootScope.$$phase) { $rootScope.$apply(); }
+          $timeout(function(){
+            func.apply(Intercom, arguments);
+          });
           return $intercom;
         };
       }
@@ -215,11 +216,9 @@
       $intercom.$on = function(event, callback) {
         if (!isEvent[event]) { return; }
         global.Intercom('on'+_capitalize_(event), function() {
-          if ($rootScope.$$phase) {
+          $timeout(function(){
             callback();
-          } else {
-            $rootScope.$apply(callback);
-          }
+          });
         });
         return $intercom;
       };
@@ -293,4 +292,3 @@
   })();
   */
 }));
-
