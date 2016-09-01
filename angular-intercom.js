@@ -113,11 +113,6 @@
         global.Intercom('update', _options );
       }
 
-      if (config.asyncLoading) {
-        createScript(config.scriptUrl, config.appID);
-      }
-
-
       function $intercom() {
         global.Intercom.apply(global.Intercom, arguments);
         return $intercom;
@@ -131,6 +126,9 @@
           }
           if (options.app_id && options.app_id !== _options.app_id) {
             _options.app_id = options.app_id;
+          }
+          if (config.asyncLoading) {
+              createScript(config.scriptUrl, _options.app_id);
           }
           global.Intercom('boot', _options);
           return $intercom;
@@ -293,4 +291,3 @@
   })();
   */
 }));
-
