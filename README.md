@@ -2,7 +2,7 @@
 An Angular.js wrapper for Intercom.io providing a simple and familiar API for Angular Developer. I also added a asynchronous loading option <code>$intercomProvider.asyncLoading(true)</code> to allow anyone to quickly drop in and start using Intercom. This is great for startups who need a quick and easy way to interact with their customers
 
 
-#How do I add this to my project?
+# How do I add this to my project?
 You can download `angular-intercom` by:
 
 * (prefered) Using bower and running `bower install angular-intercom --save`
