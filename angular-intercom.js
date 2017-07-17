@@ -183,6 +183,9 @@
           global.Intercom('show');
           return $intercom;
         },
+        getVisitorId: function() {
+          return global.Intercom('getVisitorId');
+        },
         reattachActivator: function() {
           global.Intercom('reattach_activator');
           return $intercom;
